@@ -2,6 +2,7 @@ from typing import List
 
 from app.models.message import Message
 
+from app.config.prompts import SYSTEM_PROMPT
 
 class Conversation:
     """
@@ -9,7 +10,12 @@ class Conversation:
     """
 
     def __init__(self) -> None:
-        self._messages: List[Message] = []
+        self._messages = [
+            Message(
+                role="system",
+                content=SYSTEM_PROMPT
+            )
+        ]
 
     def add_message(self, role: str, content: str) -> None:
         self._messages.append(

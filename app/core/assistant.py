@@ -24,11 +24,13 @@ class Assistant:
 
             self.conversation.add_user_message(question)
 
+            messages = self.conversation.get_messages_as_dict()
+
             self.console.display_assistant_prefix()
 
             response = ""
 
-            for chunk in self.brain.stream_chat(MODEL_NAME, question):
+            for chunk in self.brain.stream_chat(MODEL_NAME, messages):
                 response += chunk
                 self.console.display_stream_chunk(chunk)
 
