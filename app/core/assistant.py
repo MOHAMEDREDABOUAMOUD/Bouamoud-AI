@@ -2,6 +2,7 @@ from app.brain.ollama_client import OllamaClient
 from app.config.settings import MODEL_NAME
 from app.conversation.conversation import Conversation
 from app.ui.console import Console
+from app.services.memory_service import MemoryService
 
 
 class Assistant:
@@ -10,6 +11,17 @@ class Assistant:
         self.console = Console()
         self.conversation = Conversation()
         self.brain = OllamaClient()
+        self.memory_service = MemoryService()
+        self.memory_service.initialize()
+        memories = self.memory_service.load()
+
+        if memories:
+            content = "Informations connues sur l'utilisateur :\n\n"
+
+            for memory in memories:
+                content += f"- {memory.content}\n"
+
+            self.conversation.add_system_message(content)
 
     def run(self) -> None:
         self.console.display_welcome()
@@ -23,6 +35,8 @@ class Assistant:
                 break
 
             self.conversation.add_user_message(question)
+
+            self.memory_service.remember(question)
 
             messages = self.conversation.get_messages_as_dict()
 

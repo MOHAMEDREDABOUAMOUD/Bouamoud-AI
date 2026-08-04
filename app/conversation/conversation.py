@@ -25,6 +25,12 @@ class Conversation:
             )
         )
 
+    def add_system_message(self, content: str) -> None:
+        """
+        Ajoute un message système.
+        """
+        self.add_message("system", content)
+
     def add_user_message(self, content: str) -> None:
         """
         Ajoute un message utilisateur.
