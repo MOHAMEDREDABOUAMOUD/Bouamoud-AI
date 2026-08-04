@@ -2,6 +2,7 @@ from ollama import Client
 
 from app.config.settings import OLLAMA_HOST
 
+from collections.abc import Iterator
 
 class OllamaClient:
 
@@ -20,9 +21,9 @@ class OllamaClient:
             ],
             stream=stream
         )
-    
-    def stream_chat(self, model: str, message: str):
-        return self.client.chat(
+
+    def stream_chat(self, model: str, message: str) -> Iterator[str]:
+        stream = self.client.chat(
             model=model,
             messages=[
                 {
@@ -32,3 +33,9 @@ class OllamaClient:
             ],
             stream=True
         )
+
+        for chunk in stream:
+            content = chunk.message.content
+
+            if content is not None:
+                yield content
